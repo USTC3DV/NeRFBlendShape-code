@@ -1,6 +1,6 @@
 # Reconstructing Personalized Semantic Facial NeRF Models From Monocular Video
 PyTorch implementation of the paper "Reconstructing Personalized Semantic Facial NeRF Models From Monocular Video". This repository contains the inference code, data and released pretrained model.
-|Project Page(https://ustc3dv.github.io/NeRFBlendShape/)|Paper|
+|[Project Page](https://ustc3dv.github.io/NeRFBlendShape/)|[Paper]()|
 ![teaser](fig/teaser.png)
 We present a semantic model for human head defined with neural radiance field. In this model, multi-level voxel field is adopted as basis with corresponding expression coefficients, which enables strong representation ability on the aspect of rendering and fast training.
 
