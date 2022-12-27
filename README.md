@@ -26,8 +26,8 @@ dataset
 ├── id1
 │   ├── id1.mp4 #the captured video
 │   ├── max_46.txt #the maximum of the expression coefficients
-│   └── min_46.txt #the minimum of the expression coefficients
-│   └── pretrained.pth.tar #pretrained model 
+│   ├── min_46.txt #the minimum of the expression coefficients
+│   ├── pretrained.pth.tar #pretrained model 
 │   └── transforms.json #intrinsics, poses and tracked expression coefficients
 ├── id2
 │   ├── ...
