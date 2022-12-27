@@ -17,7 +17,7 @@ We track the RGB sequence and get expression coefficients, poses and intrinsics.
 
 Some videos are from the dataset collected by [Neural Voice Puppetry](https://justusthies.github.io/posts/neural-voice-puppetry/) and [SSP-NeRF](https://alvinliu0.github.io/projects/SSP-NeRF). We also capture some monocular videos with exaggerated expressions and large head rotations. In each captured video, the subject is asked to perform arbitrary expressions. The last 500 frames serve as the testing dataset.
 
-Download dataset and pretrained models [here](https://drive.google.com/drive/folders/1OiUvo7vHekVpy67Nuxnh3EuJQo7hlSq1?usp=sharing), unzip them to the root dir of this project.
+Download preprocessed data and pretrained models [here](https://drive.google.com/drive/folders/1OiUvo7vHekVpy67Nuxnh3EuJQo7hlSq1?usp=sharing), unzip them to the root dir of this project.
 
 The folder structure is as follows:
 
