@@ -1,7 +1,7 @@
 
-NAME=id4
+NAME=id1
 
-CUDA_VISIBLE_DEVICES=7 python run_nerfblendshape.py\
+CUDA_VISIBLE_DEVICES=0 python run_nerfblendshape.py\
     --img_idpath ./dataset/$NAME/transforms_train.json \
     --exp_idpath ./dataset/$NAME/transforms_train.json \
     --pose_idpath ./dataset/$NAME/transforms_train.json \
