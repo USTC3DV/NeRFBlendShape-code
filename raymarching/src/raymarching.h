@@ -3,6 +3,14 @@
 #include <stdint.h>
 #include <torch/torch.h>
 #include <torch/extension.h>
+
+// _backend.march_rays_train(rays_o, rays_d, density_grid, bound, N, H, M, points, offsets)
+void march_rays_train(at::Tensor rays_o, at::Tensor rays_d, at::Tensor grid, const float mean_density, const int iter_density, const float bound, const uint32_t N, const uint32_t H, const uint32_t M, at::Tensor xyzs, at::Tensor dirs, at::Tensor deltas,at::Tensor xyzstorays, at::Tensor rays, at::Tensor counter, const bool perturb);
+
+// _backend.composite_rays_train_forward(sigmas, rgbs, rays, bound, M, N, depth, image)
+void composite_rays_train_forward(at::Tensor sigmas, at::Tensor rgbs, at::Tensor deltas, at::Tensor rays, const float bound, at::Tensor bg_color, const uint32_t M, const uint32_t N, at::Tensor depth, at::Tensor image,at::Tensor A);
+void composite_rays_train_backward(at::Tensor grad_img, at::Tensor grad_A,at::Tensor sigmas, at::Tensor rgbs, at::Tensor deltas, at::Tensor rays, at::Tensor image,at::Tensor A, const float bound, const uint32_t M, const uint32_t N, at::Tensor grad_sigmas, at::Tensor grad_rgbs);
+
 // inference functions
 void march_rays(const uint32_t n_alive, const uint32_t n_step, at::Tensor rays_alive, at::Tensor rays_t, at::Tensor rays_o, at::Tensor rays_d, const float bound, const uint32_t H, at::Tensor density_grid, const float mean_density, at::Tensor near, at::Tensor far, at::Tensor xyzs, at::Tensor dirs, at::Tensor deltas);
 void composite_rays(const uint32_t n_alive, const uint32_t n_step, at::Tensor rays_alive, at::Tensor rays_t, at::Tensor sigmas, at::Tensor rgbs, at::Tensor deltas, at::Tensor weights, at::Tensor depth, at::Tensor image);

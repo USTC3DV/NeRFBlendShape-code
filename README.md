@@ -1,6 +1,6 @@
 # Reconstructing Personalized Semantic Facial NeRF Models From Monocular Video
 
-PyTorch implementation of the paper "Reconstructing Personalized Semantic Facial NeRF Models From Monocular Video". This repository contains the inference code, data and released pretrained model.
+Official PyTorch implementation of the paper "Reconstructing Personalized Semantic Facial NeRF Models From Monocular Video". This repository contains code, data and released pretrained model.
 
 **|[Project Page](https://ustc3dv.github.io/NeRFBlendShape/)|[Paper](https://arxiv.org/abs/2210.06108)|**
 
@@ -13,26 +13,7 @@ We track the RGB sequence and get expression coefficients, poses and intrinsics.
 
 ![pipeline](fig/pipeline.jpg)
 
-## Monocular RGB Video Data and Pretrained models
 
-Some videos are from the dataset collected by [Neural Voice Puppetry](https://justusthies.github.io/posts/neural-voice-puppetry/) and [SSP-NeRF](https://alvinliu0.github.io/projects/SSP-NeRF). We also capture some monocular videos with exaggerated expressions and large head rotations. In each captured video, the subject is asked to perform arbitrary expressions. The last 500 frames serve as the testing dataset.
-
-Download preprocessed data and pretrained models [here](https://drive.google.com/drive/folders/1OiUvo7vHekVpy67Nuxnh3EuJQo7hlSq1?usp=sharing), unzip them to the root dir of this project.
-
-The folder structure is as follows:
-
-```
-dataset
-├── id1
-│   ├── id1.mp4 #the captured video
-│   ├── max_46.txt #the maximum of the expression coefficients
-│   ├── min_46.txt #the minimum of the expression coefficients
-│   ├── pretrained.pth.tar #pretrained model 
-│   └── transforms.json #intrinsics, poses and tracked expression coefficients
-├── id2
-│   ├── ...
-...
-```
 
 ## Setup
 
@@ -52,17 +33,54 @@ Install [tiny-cuda-nn](https://github.com/NVlabs/tiny-cuda-nn)
 pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
 ```
 
-## Run the Inference Code
-
-run
+## Train
+Download our [preprocessed dataset](https://drive.google.com/drive/folders/1OiUvo7vHekVpy67Nuxnh3EuJQo7hlSq1?usp=sharing) and unzip it to `./dataset` or organize your own data in the same folder structure:
 
 ```
-sh run.sh
+dataset
+├── id1
+│   ├── head_imgs #segmented head images 
+│   ├── ori_imgs #extracted video frames and landmarks
+│   ├── parsing #semantic segmentation
+│   ├── transforms.json #intrinsics, poses and tracked expression coefficients
+│   └── bc.jpg #background image
+├── id2
+│   ├── ...
+...
 ```
 
-in `run.sh` , you could change `$NAME`  to set specific subject id. The rendered result will be found in workspace folder `trial_$NAME`.  `xxx.png` is the facial reenactment result and `xxx_nvs.png` is novel view synthesis result.
+Then you could run `run_train.sh` to train a NeRFBlendShape model
+
+```
+bash run_train.sh id1 -500 0
+```
+This means you want to run training with the dataset of `id1`, the last 500 frames are used for inference and GPU_ID is `0`
+
+`run.sh` will first compute the range of expression coefficients with `get_max.py`, this will save `max_46.txt` and `min_46.txt` to `dataset/$NAME`. Then it will run `run_nerfblendshape.py` to start training. You could also adjust the following options of `run_nerfblendshape.py`:
+
+`--workspace`: the workspace folder of your experiment. Checkpoints, inference results and script backup will all be placed here.
+
+`--basis_num` the dimention of your expression coefficient. In our data, this value is 46.
+
+`--to_mem` Choose this if you want `nerf/provider` to preload the whole dataset to memory before training and change needed batch of data from `.cpu()` to `.cuda()` in every step, otherwise, in every step `nerf/provider` will load needed batch of data from disk to memory first, then change the data from  `cpu()` to `cuda()`. 
+
+`--use_lpips` whether you want to use perceptual loss to improve details.
+
+`--add_mean` add '1.0' to your expression coefficient to represent neutral expression.
+
+## Inference
+When training is finished, the checkpoint will be saved in `the_name_of_workspace/checkpoints`.
+
+to run inference with a given checkpoint: 
+
+```
+bash run_infer.sh id1 -500 0 the_path_of_your_checkpoint
+```
+This means you want to run inference of `the_path_of_your_checkpoint` with the dataset of `id1`, the last 500 frames are used for inference and GPU_ID is `0`. `run_infer.sh` also runs `run_nerfblendshape.py` but with `--mode normal_test`
 
 You could use `generate_video.py` to convert rendered images into a video sequence.
+
+You could also use our [pretrained model](https://drive.google.com/drive/folders/1OiUvo7vHekVpy67Nuxnh3EuJQo7hlSq1?usp=sharing) to run inference imediately.
 
 ## Citation
 

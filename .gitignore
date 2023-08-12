@@ -1,0 +1,4 @@
+trial_*
+**/__pycache__/
+dataset/
+data_copy.py

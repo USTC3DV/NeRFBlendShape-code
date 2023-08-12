@@ -2,14 +2,13 @@ import imp
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 import tinycudann as tcnn
 from .renderer import NeRFRenderer
 from .gridencoder import ExpHashEncoder
 from torch.cuda.amp import autocast as autocast
 
 import numpy as np
-
-from datetime import datetime
 
 torch.set_printoptions(profile="full")
 
@@ -25,7 +24,6 @@ class NeRFNetwork(NeRFRenderer):
                  basis_num=None,
                  no_pru=False,
                  level_dim=4,
-                 SH_deg=3,
                  num_levels=16,
                  add_mean=False,
                  mode="train",
@@ -37,7 +35,7 @@ class NeRFNetwork(NeRFRenderer):
         self.hidden_dim = hidden_dim
         self.geo_feat_dim = geo_feat_dim
         self.basis_num = basis_num
-        self.SH_deg=3
+
         self.num_levels=num_levels
         self.add_mean=add_mean
         self.mode=mode
@@ -103,7 +101,7 @@ class NeRFNetwork(NeRFRenderer):
         print("load min_per successfully:min_per is :")
         print(self.min_per)
     
-    def forward(self, x, exps,exp_ori, bound,d=None,index=None,xyzstorays=None,only_density=False):
+    def forward(self, x, exps, bound,d=None,index=None,xyzstorays=None,only_density=False):
         if xyzstorays == None:
             xyzstorays=torch.zeros([x.shape[0]],device="cuda")
 
